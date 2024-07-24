@@ -35,11 +35,14 @@ public:
     void gridToParticle(sycl::queue& queue) override;
     void updateDeformationGradient(sycl::queue& queue) override;
 
+    void setParticles(const std::vector<Particle>& particles);
+    std::vector<Grid> getGrid() const;
+    std::vector<Particle> getParticles() const;
+
 protected:
     sycl::double3 interpolate(const sycl::double3& position, sycl::queue& queue) override;
     Matrix3d computeStress(const Matrix3d& deformationGradient, const Particle& particle) override;
 
-private:
     sycl::buffer<Particle, 1> d_particles;
     sycl::buffer<Grid, 1> d_grid;
 };

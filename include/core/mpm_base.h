@@ -34,13 +34,63 @@ struct Matrix3d {
 
     double& operator()(int row, int col) { return data[row * 3 + col]; }
     const double& operator()(int row, int col) const { return data[row * 3 + col]; }
+
+    // Zero matrix
+    static Matrix3d Zero() {
+        return Matrix3d();
+    }
+
+    // Identity matrix
+    static Matrix3d Identity() {
+        Matrix3d m;
+        m(0,0) = m(1,1) = m(2,2) = 1.0;
+        return m;
+    }
+
+    // Matrix multiplication
+    Matrix3d operator*(const Matrix3d& other) const {
+        Matrix3d result;
+        for (int i = 0; i < 3; ++i) {
+            for (int j = 0; j < 3; ++j) {
+                result(i,j) = 0;
+                for (int k = 0; k < 3; ++k) {
+                    result(i,j) += (*this)(i,k) * other(k,j);
+                }
+            }
+        }
+        return result;
+    }
+
+    // Scalar multiplication
+    Matrix3d operator*(double scalar) const {
+        Matrix3d result;
+        for (int i = 0; i < 9; ++i) {
+            result.data[i] = this->data[i] * scalar;
+        }
+        return result;
+    }
+
+    // Addition
+    Matrix3d operator+(const Matrix3d& other) const {
+        Matrix3d result;
+        for (int i = 0; i < 9; ++i) {
+            result.data[i] = this->data[i] + other.data[i];
+        }
+        return result;
+    }
 };
+
+// Non-member scalar multiplication
+inline Matrix3d operator*(double scalar, const Matrix3d& mat) {
+    return mat * scalar;
+}
 
 struct Particle {
     sycl::double3 position;
     sycl::double3 velocity;
     Matrix3d deformationGradient;
     double mass;
+    double volume;
     
     // Additional properties
     Matrix3d stress;
