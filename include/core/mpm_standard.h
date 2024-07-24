@@ -40,8 +40,8 @@ protected:
     Matrix3d computeStress(const Matrix3d& deformationGradient, const Particle& particle) override;
 
 private:
-    std::vector<Particle> d_particles;
-    std::vector<Grid> d_grid;
+    sycl::buffer<Particle, 1> d_particles;
+    sycl::buffer<Grid, 1> d_grid;
 };
 
 } // namespace gm_mpm
