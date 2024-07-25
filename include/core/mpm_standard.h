@@ -35,9 +35,9 @@ public:
     void gridToParticle(sycl::queue& queue) override;
     void updateDeformationGradient(sycl::queue& queue) override;
 
+    const std::vector<Grid>& getGrid() const;
+    const std::vector<Particle>& getParticles() const;
     void setParticles(const std::vector<Particle>& particles);
-    std::vector<Grid> getGrid() const;
-    std::vector<Particle> getParticles() const;
 
 protected:
     sycl::double3 interpolate(const sycl::double3& position, sycl::queue& queue) override;
@@ -45,6 +45,14 @@ protected:
 
     sycl::buffer<Particle, 1> d_particles;
     sycl::buffer<Grid, 1> d_grid;
+    
+    std::vector<Particle> particles;
+    std::vector<Grid> grid;
+
+    double gridSpacing;
+    sycl::int3 gridResolution;
+    
+    sycl::queue queue;
 };
 
 } // namespace gm_mpm
